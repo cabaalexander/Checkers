@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+}
+
+.playBoard {
+    position: relative;
+    display: inline-block;
+}
+
+.brownSquare {
+    height: 80px;
+    width: 80px;
+    background: #E66213;
+}
+
+.whiteSquare {
+    height: 80px;
+    width: 80px;
+    background: #FBDAC6;
+}
+
+.redPiece {
+  height: 50px;
+  width: 50px;
+  background: red;
+  border: 1px black solid;
+  border-radius: 40px;
+  position: absolute;
+}
+
+.whitePiece {
+  height: 50px;
+  width: 50px;
+  background: white;
+  border: 1px black solid;
+  border-radius: 40px;
+  position: absolute;
+}
