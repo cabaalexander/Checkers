@@ -46,33 +46,30 @@ $(document).ready(function() {
         return pieces;
     }
 
-    function movePiece(piece) {
+    function move(piece, pieces) {
         var coords = piece.coords;
         var color = piece.color;
-        var result = [];
-
+        var moves = [];
         if (color === "Red") {
             if (coords.y < 7) {
                 if (coords.x > 0) {
-                    result.push({y: coords.y + 1, x: coords.x - 1});
+                    moves.push({y: coords.y + 1, x: coords.x - 1});
                 }
                 if (coords.x < 7){
-                    result.push({y: coords.y + 1, x: coords.x + 1});
+                    moves.push({y: coords.y + 1, x: coords.x + 1});
                 }
             }
         }
         else {
             if (coords.y > 0){
                 if (coords.x > 0) {
-                    result.push({y: coords.y - 1, x: coords.x - 1});
+                    moves.push({y: coords.y - 1, x: coords.x - 1});
                 }
                 if (coords.x < 7){
-                    result.push({y: coords.y - 1, x: coords.x + 1});
+                    moves.push({y: coords.y - 1, x: coords.x + 1});
                 }
             }
         }
-
-        return result;
     }
 
     function drawBoard() {
@@ -80,9 +77,9 @@ $(document).ready(function() {
         $(playBoard).addClass("playBoard");
         var table = document.createElement("table");
         $(playBoard).append(table);
-        for (var y = 0; y < 7; y++) {
+        for (var y = 0; y <= 7; y++) {
             var tr = document.createElement("tr");
-            for (var x = 0; x < 7; x++) {
+            for (var x = 0; x <= 7; x++) {
                 var td = document.createElement("td");
                 if ((x + y) % 2 === 0) {
                     $(td).addClass("brownSquare");
@@ -106,12 +103,29 @@ $(document).ready(function() {
             else {
                 $(domPiece).addClass("whitePiece");
             }
-            $(domPiece).css({
-                left: 80,
-                bottom: 80
-            });
-            $("playBoard").append(domPiece);
-        })
+            $(domPiece)
+                .css({
+                    left: 82 * piece.coords.x,
+                    bottom: 82 * piece.coords.y
+                })
+                .click(function() {
+                    var moves = move(piece);
+                    $(moves).each(function(index, move) {
+                        var domMove = document.createElement("div");
+                        $(domMove)
+                            .addClass("move")
+                            .css({
+                                left: 82 * $(this)[0].x,
+                                bottom: 82 * $(this)[0].y
+                            });
+                        $(".playBoard").append(domMove);
+                    });
+                })
+                .mouseleave(function() {
+                    $(".move").remove();
+                });
+            $(".playBoard").append(domPiece);
+        });
     }
 
     var pieces = createPieces();
@@ -129,18 +143,29 @@ $(document).ready(function() {
         $("body").append("<br /> <br />" + JSON.stringify(pieces.playerOne));
         $("body").append("<br /> <br />" + JSON.stringify(pieces.cpu));
 
-        $("body").append("<br /> <br />" + JSON.stringify(movePiece(pieces.playerOne[0])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.playerOne[1])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.playerOne[2])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.playerOne[3])));
+        $("body").append("<br /> <br />" + JSON.stringify(move(pieces.playerOne[0])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[1])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[2])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[3])));
 
-        $("body").append("<br /> <br />" + JSON.stringify(movePiece(pieces.cpu[0])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.cpu[1])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.cpu[2])));
-        $("body").append(" <====> " + JSON.stringify(movePiece(pieces.cpu[3])));
+        $("body").append("<br /> <br />" + JSON.stringify(move(pieces.cpu[0])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[1])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[2])));
+        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[3])));
 
         $("body").append("<br /> <br />");
 
-        drawBoard();drawPieces(pieces);
+        drawBoard();
+        drawPieces(pieces.playerOne);
+        drawPieces(pieces.cpu);
+
+        // $("body").append("<br /> <br />");
+        // var divElement = document.createElement("div");
+        // $(divElement).addClass("redPiece");
+        // $(divElement).css({
+        //     bottom: 80 * pieces.cpu[1].coords.y,
+        //     left: 80 * pieces.cpu[1].coords.x
+        // });
+        // $(".playBoard").append(divElement);
     });
 });

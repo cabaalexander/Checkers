@@ -1,5 +1,6 @@
 table {
     border-collapse: collapse;
+    border-spacing: 0px;
 }
 
 .playBoard {
@@ -19,9 +20,23 @@ table {
     background: #FBDAC6;
 }
 
+.cleanSquare {
+    height: 80px;
+    width: 80px;
+    background: #FBDAC6;
+    position: absolute;
+}
+
+.move {
+    height: 82px;
+    width: 82px;
+    background: #FFFF66;
+    position: absolute;
+}
+
 .redPiece {
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 80px;
   background: red;
   border: 1px black solid;
   border-radius: 40px;
@@ -29,8 +44,8 @@ table {
 }
 
 .whitePiece {
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 80px;
   background: white;
   border: 1px black solid;
   border-radius: 40px;
