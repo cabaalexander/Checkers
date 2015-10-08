@@ -70,6 +70,7 @@ $(document).ready(function() {
                 }
             }
         }
+        return moves;
     }
 
     function drawBoard() {
@@ -87,6 +88,9 @@ $(document).ready(function() {
                 else {
                     $(td).addClass("whiteSquare");
                 }
+                $(td).click(function() {
+                    $(".move").remove();
+                });
                 $(tr).append(td);
             }
             $(table).prepend(tr);
@@ -109,6 +113,7 @@ $(document).ready(function() {
                     bottom: 82 * piece.coords.y
                 })
                 .click(function() {
+                    $(".move").remove();
                     var moves = move(piece);
                     $(moves).each(function(index, move) {
                         var domMove = document.createElement("div");
@@ -120,9 +125,6 @@ $(document).ready(function() {
                             });
                         $(".playBoard").append(domMove);
                     });
-                })
-                .mouseleave(function() {
-                    $(".move").remove();
                 });
             $(".playBoard").append(domPiece);
         });
