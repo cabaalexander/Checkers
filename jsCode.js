@@ -84,12 +84,14 @@ $(document).ready(function() {
         }
         $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
             var moveString = JSON.stringify(move);
-            $(pieces).each(function(piecesIndex, piece) { //just using one set of pieces... fix this, so it checks all the pieces
-                var pieceString = JSON.stringify(piece.coords);
-                if (moveString === pieceString) {
-                    delete moves[movesIndex];
-                    return false;
-                }
+            Object.keys(pieces).forEach(function(player) { //loop through each player
+                $(pieces[player]).each(function(indexPiece, piece) { //loop through each piece of the player
+                    var pieceString = JSON.stringify(piece.coords);
+                    if (moveString === pieceString) {
+                        delete moves[movesIndex];
+                        return false;
+                    }
+                });
             });
         });
         return moves;
@@ -160,32 +162,35 @@ $(document).ready(function() {
     }
 
     function drawPieces(pieces) {
-        $(pieces).each(function(index, piece) {
-            var domPiece = document.createElement("div");
-            if (piece.color === "Red") {
-                $(domPiece).addClass("redPiece");
-            }
-            else {
-                $(domPiece).addClass("whitePiece");
-            }
-            $(domPiece)
-                .css({
-                    left: 82 * piece.coords.x,
-                    bottom: 82 * piece.coords.y
-                })
-                .click(function() {
-                    $(".moveSquare").remove();
-                    var moves = move(piece, pieces);
-                    var jumps = jump(piece, pieces);
-                    alert(JSON.stringify(moves));
-                    alert(JSON.stringify(jumps));
-                    drawMove(moves);
-                });
-            $(".playBoard").append(domPiece);
+        Object.keys(pieces).forEach(function(player) {
+            $(pieces[player]).each(function(indexPiece, piece) {
+                var domPiece = document.createElement("div");
+                if (piece.color === "Red") {
+                    $(domPiece).addClass("redPiece");
+                }
+                else {
+                    $(domPiece).addClass("whitePiece");
+                }
+                $(domPiece)
+                    .css({
+                        left: 82 * piece.coords.x,
+                        bottom: 82 * piece.coords.y
+                    })
+                    .click(function() {
+                        $(".moveSquare").remove();
+                        var moves = move(piece, pieces);
+                        var jumps = jump(piece, pieces);
+                        alert(JSON.stringify(moves)); //debugging
+                        alert(JSON.stringify(jumps)); //debugging
+                        drawMoveOrJump(moves);
+                        // drawMoveOrJump(jumps);
+                    });
+                $(".playBoard").append(domPiece);
+            })
         });
     }
 
-    function drawMove(moves) {
+    function drawMoveOrJump(moves) {
         if (moves[0] != null || moves[1] != null) {  //WAtch this, this returns some times one value others two...
             $(moves).each(function(index, move) {
                 var domMove = document.createElement("div");
@@ -228,8 +233,7 @@ $(document).ready(function() {
         $("body").append("<br /> <br />");
 
         drawBoard();
-        drawPieces(pieces.playerOne);
-        drawPieces(pieces.cpu);
+        drawPieces(pieces);
 
         // $("body").append("<br /> <br />");
         // var divElement = document.createElement("div");
