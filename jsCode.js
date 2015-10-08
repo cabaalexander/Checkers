@@ -70,6 +70,16 @@ $(document).ready(function() {
                 }
             }
         }
+        $(moves).each(function(movesIndex, move) {
+            var moveString = JSON.stringify(move);
+            $(pieces).each(function(piecesIndex, piece) { //just using one set of pieces...
+                var pieceString = JSON.stringify(piece.coords);
+                if (moveString === pieceString) {
+                    delete moves[movesIndex];
+                    return false;
+                }
+            });
+        });
         return moves;
     }
 
@@ -114,17 +124,19 @@ $(document).ready(function() {
                 })
                 .click(function() {
                     $(".move").remove();
-                    var moves = move(piece);
-                    $(moves).each(function(index, move) {
-                        var domMove = document.createElement("div");
-                        $(domMove)
-                            .addClass("move")
-                            .css({
-                                left: 82 * $(this)[0].x,
-                                bottom: 82 * $(this)[0].y
-                            });
-                        $(".playBoard").append(domMove);
-                    });
+                    var moves = move(piece, pieces);
+                    if (moves[0] != null) {  //WAtch this, this returns some times one value others two...
+                        $(moves).each(function(index, move) {
+                            var domMove = document.createElement("div");
+                            $(domMove)
+                                .addClass("move")
+                                .css({
+                                    left: 82 * $(this)[0].x,
+                                    bottom: 82 * $(this)[0].y
+                                });
+                            $(".playBoard").append(domMove);
+                        });
+                    }
                 });
             $(".playBoard").append(domPiece);
         });
@@ -145,15 +157,15 @@ $(document).ready(function() {
         $("body").append("<br /> <br />" + JSON.stringify(pieces.playerOne));
         $("body").append("<br /> <br />" + JSON.stringify(pieces.cpu));
 
-        $("body").append("<br /> <br />" + JSON.stringify(move(pieces.playerOne[0])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[1])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[2])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[3])));
+        // $("body").append("<br /> <br />" + JSON.stringify(move(pieces.playerOne[0])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[1])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[2])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[3])));
 
-        $("body").append("<br /> <br />" + JSON.stringify(move(pieces.cpu[0])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[1])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[2])));
-        $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[3])));
+        // $("body").append("<br /> <br />" + JSON.stringify(move(pieces.cpu[0])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[1])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[2])));
+        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[3])));
 
         $("body").append("<br /> <br />");
 
