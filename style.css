@@ -20,14 +20,7 @@ table {
     background: #FBDAC6;
 }
 
-.cleanSquare {
-    height: 80px;
-    width: 80px;
-    background: #FBDAC6;
-    position: absolute;
-}
-
-.move {
+.moveSquare {
     height: 82px;
     width: 82px;
     background: #FFFF66;

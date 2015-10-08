@@ -47,32 +47,44 @@ $(document).ready(function() {
     }
 
     function move(piece, pieces) {
-        var coords = piece.coords;
-        var color = piece.color;
+        var boardLimit = 7;
+        var step = 1;
         var moves = [];
-        if (color === "Red") {
-            if (coords.y < 7) {
-                if (coords.x > 0) {
-                    moves.push({y: coords.y + 1, x: coords.x - 1});
+        if (piece.color === "Red") {
+            if (piece.coords.y < boardLimit) {
+                if (piece.coords.x > 0) {
+                    moves.push({
+                        y: piece.coords.y + step,
+                        x: piece.coords.x - step}
+                    );
                 }
-                if (coords.x < 7){
-                    moves.push({y: coords.y + 1, x: coords.x + 1});
+                if (piece.coords.x < boardLimit){
+                    moves.push({
+                        y: piece.coords.y + step,
+                        x: piece.coords.x + step}
+                    );
                 }
             }
         }
         else {
-            if (coords.y > 0){
-                if (coords.x > 0) {
-                    moves.push({y: coords.y - 1, x: coords.x - 1});
+            if (piece.coords.y > 0){
+                if (piece.coords.x > 0) {
+                    moves.push({
+                        y: piece.coords.y - step,
+                        x: piece.coords.x - step}
+                    );
                 }
-                if (coords.x < 7){
-                    moves.push({y: coords.y - 1, x: coords.x + 1});
+                if (piece.coords.x < boardLimit){
+                    moves.push({
+                        y: piece.coords.y - step,
+                        x: piece.coords.x + step}
+                    );
                 }
             }
         }
-        $(moves).each(function(movesIndex, move) {
+        $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
             var moveString = JSON.stringify(move);
-            $(pieces).each(function(piecesIndex, piece) { //just using one set of pieces...
+            $(pieces).each(function(piecesIndex, piece) { //just using one set of pieces... fix this, so it checks all the pieces
                 var pieceString = JSON.stringify(piece.coords);
                 if (moveString === pieceString) {
                     delete moves[movesIndex];
@@ -81,6 +93,45 @@ $(document).ready(function() {
             });
         });
         return moves;
+    }
+
+    function jump(piece, pieces) { //move and jump can be refactored as one
+        var boardLimit = 6;
+        var step = 2;
+        var jumps = [];
+        if (piece.color === "Red") {
+            if (piece.coords.y < boardLimit) {
+                if (piece.coords.x > 0) {
+                    jumps.push({
+                        y: piece.coords.y + step,
+                        x: piece.coords.x - step}
+                    );
+                }
+                if (piece.coords.x < boardLimit){
+                    jumps.push({
+                        y: piece.coords.y + step,
+                        x: piece.coords.x + step}
+                    );
+                }
+            }
+        }
+        else {
+            if (piece.coords.y > 0){
+                if (piece.coords.x > 0) {
+                    jumps.push({
+                        y: piece.coords.y - step,
+                        x: piece.coords.x - step}
+                    );
+                }
+                if (piece.coords.x < boardLimit){
+                    jumps.push({
+                        y: piece.coords.y - step,
+                        x: piece.coords.x + step}
+                    );
+                }
+            }
+        }
+        return jumps;
     }
 
     function drawBoard() {
@@ -99,7 +150,7 @@ $(document).ready(function() {
                     $(td).addClass("whiteSquare");
                 }
                 $(td).click(function() {
-                    $(".move").remove();
+                    $(".moveSquare").remove();
                 });
                 $(tr).append(td);
             }
@@ -123,23 +174,30 @@ $(document).ready(function() {
                     bottom: 82 * piece.coords.y
                 })
                 .click(function() {
-                    $(".move").remove();
+                    $(".moveSquare").remove();
                     var moves = move(piece, pieces);
-                    if (moves[0] != null) {  //WAtch this, this returns some times one value others two...
-                        $(moves).each(function(index, move) {
-                            var domMove = document.createElement("div");
-                            $(domMove)
-                                .addClass("move")
-                                .css({
-                                    left: 82 * $(this)[0].x,
-                                    bottom: 82 * $(this)[0].y
-                                });
-                            $(".playBoard").append(domMove);
-                        });
-                    }
+                    var jumps = jump(piece, pieces);
+                    alert(JSON.stringify(moves));
+                    alert(JSON.stringify(jumps));
+                    drawMove(moves);
                 });
             $(".playBoard").append(domPiece);
         });
+    }
+
+    function drawMove(moves) {
+        if (moves[0] != null || moves[1] != null) {  //WAtch this, this returns some times one value others two...
+            $(moves).each(function(index, move) {
+                var domMove = document.createElement("div");
+                $(domMove)
+                    .addClass("moveSquare")
+                    .css({
+                        left: 82 * $(this)[0].x,
+                        bottom: 82 * $(this)[0].y
+                    });
+                $(".playBoard").append(domMove);
+            });
+        }
     }
 
     var pieces = createPieces();
