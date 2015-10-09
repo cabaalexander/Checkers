@@ -151,14 +151,16 @@ $(document).ready(function() {
             for (var x = 0; x <= 7; x++) {
                 var td = document.createElement("td");
                 if ((x + y) % 2 === 0) {
-                    $(td).addClass("brownSquare square");
+                    $(td).css("background", "#E66213");
                 }
                 else {
-                    $(td).addClass("whiteSquare square");
+                    $(td).css("background", "#FBDAC6");
                 }
-                $(td).click(function() {
-                    $(".moveSquare").remove();
-                });
+                $(td)
+                    .addClass("square")
+                    .click(function() {
+                        $(".moveSquare").remove();
+                    });
                 $(tr).append(td);
             }
             $(table).prepend(tr);
@@ -170,25 +172,22 @@ $(document).ready(function() {
         Object.keys(pieces).forEach(function(player) {
             $(pieces[player]).each(function(indexPiece, piece) {
                 var domPiece = document.createElement("div");
-                if (piece.color === "Red") {
-                    $(domPiece).addClass("redPiece");
-                }
-                else {
-                    $(domPiece).addClass("whitePiece");
-                }
                 $(domPiece)
+                    .addClass("piece")
                     .css({
                         left: 82 * piece.coords.x,
-                        bottom: 82 * piece.coords.y
+                        bottom: 82 * piece.coords.y,
+                        background: this.color
                     })
                     .click(function() {
                         $(".moveSquare").remove();
                         var moves = move(piece, pieces);
                         var jumps = jump(piece, pieces);
-                        alert(JSON.stringify(moves)); //debugging
-                        alert(JSON.stringify(jumps)); //debugging
+                        // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
+                        // alert(JSON.stringify(moves)); //debugging
+                        // alert(JSON.stringify(jumps)); //debugging
                         drawMoveOrJump(moves);
-                        drawMoveOrJump(jumps);
+                        // drawMoveOrJump(jumps);
                     });
                 $(".playBoard").append(domPiece);
             })
@@ -238,6 +237,8 @@ $(document).ready(function() {
         $("body").append("<br /> <br />");
 
         drawBoard();
+        pieces.playerOne[8].coords = {y: 3, x: 1};
+        // pieces.cpu[1].coords = {y: 4, x: 2};
         drawPieces(pieces);
 
         // $("body").append("<br /> <br />");

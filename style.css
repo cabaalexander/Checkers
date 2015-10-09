@@ -8,16 +8,9 @@ table {
     display: inline-block;
 }
 
-.brownSquare {
+.square {
     height: 80px;
     width: 80px;
-    background: #E66213;
-}
-
-.whiteSquare {
-    height: 80px;
-    width: 80px;
-    background: #FBDAC6;
 }
 
 .moveSquare {
@@ -27,19 +20,9 @@ table {
     position: absolute;
 }
 
-.redPiece {
+.piece {
   height: 80px;
   width: 80px;
-  background: red;
-  border: 1px black solid;
-  border-radius: 40px;
-  position: absolute;
-}
-
-.whitePiece {
-  height: 80px;
-  width: 80px;
-  background: white;
   border: 1px black solid;
   border-radius: 40px;
   position: absolute;
