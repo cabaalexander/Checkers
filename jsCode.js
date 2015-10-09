@@ -54,11 +54,14 @@ $(document).ready(function() {
                     var pieceString = JSON.stringify(piece.coords);
                     if (moveString === pieceString) {
                         delete moves[movesIndex];
+                        // moves.splice(movesIndex, 1);
                         return false;
                     }
                 });
             });
+            alert(movesIndex);
         });
+        // alert(JSON.stringify(moves));
     }
 
     function move(piece, pieces) {
@@ -171,6 +174,8 @@ $(document).ready(function() {
     function drawPieces(pieces) {
         Object.keys(pieces).forEach(function(player) {
             $(pieces[player]).each(function(indexPiece, piece) {
+                if (piece == null)
+                    return;
                 var domPiece = document.createElement("div");
                 $(domPiece)
                     .addClass("piece")
@@ -182,7 +187,7 @@ $(document).ready(function() {
                     .click(function() {
                         $(".moveSquare").remove();
                         var moves = move(piece, pieces);
-                        var jumps = jump(piece, pieces);
+                        // var jumps = jump(piece, pieces);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
@@ -238,8 +243,12 @@ $(document).ready(function() {
 
         drawBoard();
         pieces.playerOne[8].coords = {y: 3, x: 1};
-        // pieces.cpu[1].coords = {y: 4, x: 2};
+        pieces.cpu[1].coords = {y: 4, x: 2};
+        pieces.playerOne[11].coords = {y: 3, x: 5};
+        pieces.cpu[2].coords = {y: 4, x: 6};
+        // alert(JSON.stringify(pieces.playerOne) + "\n\n" + JSON.stringify(pieces.cpu))
         drawPieces(pieces);
+        // alert(JSON.stringify(pieces.playerOne[8].coords));
 
         // $("body").append("<br /> <br />");
         // var divElement = document.createElement("div");
