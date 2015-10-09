@@ -46,6 +46,21 @@ $(document).ready(function() {
         return pieces;
     }
 
+    function checkBoardPieces(moves, pieces) {
+        $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
+            var moveString = JSON.stringify(move);
+            Object.keys(pieces).forEach(function(player) { //loop through each player
+                $(pieces[player]).each(function(indexPiece, piece) { //loop through each piece of the player
+                    var pieceString = JSON.stringify(piece.coords);
+                    if (moveString === pieceString) {
+                        delete moves[movesIndex];
+                        return false;
+                    }
+                });
+            });
+        });
+    }
+
     function move(piece, pieces) {
         var boardLimit = 7;
         var step = 1;
@@ -82,18 +97,7 @@ $(document).ready(function() {
                 }
             }
         }
-        $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
-            var moveString = JSON.stringify(move);
-            Object.keys(pieces).forEach(function(player) { //loop through each player
-                $(pieces[player]).each(function(indexPiece, piece) { //loop through each piece of the player
-                    var pieceString = JSON.stringify(piece.coords);
-                    if (moveString === pieceString) {
-                        delete moves[movesIndex];
-                        return false;
-                    }
-                });
-            });
-        });
+        checkBoardPieces(moves, pieces);
         return moves;
     }
 
@@ -103,7 +107,7 @@ $(document).ready(function() {
         var jumps = [];
         if (piece.color === "Red") {
             if (piece.coords.y < boardLimit) {
-                if (piece.coords.x > 0) {
+                if (piece.coords.x > 1) {
                     jumps.push({
                         y: piece.coords.y + step,
                         x: piece.coords.x - step}
@@ -118,8 +122,8 @@ $(document).ready(function() {
             }
         }
         else {
-            if (piece.coords.y > 0){
-                if (piece.coords.x > 0) {
+            if (piece.coords.y > 1){
+                if (piece.coords.x > 1) {
                     jumps.push({
                         y: piece.coords.y - step,
                         x: piece.coords.x - step}
@@ -133,6 +137,7 @@ $(document).ready(function() {
                 }
             }
         }
+        checkBoardPieces(jumps, pieces);
         return jumps;
     }
 
@@ -146,10 +151,10 @@ $(document).ready(function() {
             for (var x = 0; x <= 7; x++) {
                 var td = document.createElement("td");
                 if ((x + y) % 2 === 0) {
-                    $(td).addClass("brownSquare");
+                    $(td).addClass("brownSquare square");
                 }
                 else {
-                    $(td).addClass("whiteSquare");
+                    $(td).addClass("whiteSquare square");
                 }
                 $(td).click(function() {
                     $(".moveSquare").remove();
@@ -183,7 +188,7 @@ $(document).ready(function() {
                         alert(JSON.stringify(moves)); //debugging
                         alert(JSON.stringify(jumps)); //debugging
                         drawMoveOrJump(moves);
-                        // drawMoveOrJump(jumps);
+                        drawMoveOrJump(jumps);
                     });
                 $(".playBoard").append(domPiece);
             })
