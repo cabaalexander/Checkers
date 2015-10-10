@@ -70,28 +70,28 @@ $(document).ready(function() {
             if (piece.coords.x > boardBeginning) {
                 moves.push({
                     y: piece.coords.y + step,
-                    x: piece.coords.x - step}
-                );
+                    x: piece.coords.x - step
+                });
             }
             if (piece.coords.x < boardLimit){
                 moves.push({
                     y: piece.coords.y + step,
-                    x: piece.coords.x + step}
-                );
+                    x: piece.coords.x + step
+                });
             }
         }
         else if (piece.coords.y > boardBeginning) {
             if (piece.coords.x > boardBeginning) {
                 moves.push({
                     y: piece.coords.y - step,
-                    x: piece.coords.x - step}
-                );
+                    x: piece.coords.x - step
+                });
             }
-            if (piece.coords.x < boardLimit){
+            if (piece.coords.x < boardLimit) {
                 moves.push({
                     y: piece.coords.y - step,
-                    x: piece.coords.x + step}
-                );
+                    x: piece.coords.x + step
+                });
             }
         }
         removeIfInBoard(moves, pieces);
@@ -107,28 +107,28 @@ $(document).ready(function() {
             if (piece.coords.x > boardBeginning) {
                 jumps.push({
                     y: piece.coords.y + step,
-                    x: piece.coords.x - step}
-                );
+                    x: piece.coords.x - step
+                });
             }
             if (piece.coords.x < boardLimit){
                 jumps.push({
                     y: piece.coords.y + step,
-                    x: piece.coords.x + step}
-                );
+                    x: piece.coords.x + step
+                });
             }
         }
         else if (piece.coords.y > boardBeginning) {
             if (piece.coords.x > boardBeginning) {
                 jumps.push({
                     y: piece.coords.y - step,
-                    x: piece.coords.x - step}
-                );
+                    x: piece.coords.x - step
+                });
             }
-            if (piece.coords.x < boardLimit){
+            if (piece.coords.x < boardLimit) {
                 jumps.push({
                     y: piece.coords.y - step,
-                    x: piece.coords.x + step}
-                );
+                    x: piece.coords.x + step
+                });
             }
         }
         removeIfInBoard(jumps, pieces);
