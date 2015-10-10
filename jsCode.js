@@ -53,7 +53,8 @@ $(document).ready(function() {
                 $(pieces[player]).each(function(indexPiece, piece) { //loop through each piece of the player
                     var pieceString = JSON.stringify(piece.coords);
                     if (moveString === pieceString) {
-                        moves.splice(movesIndex, 1);
+                        delete moves[movesIndex];
+                        // moves.splice(movesIndex, 1);
                         return false;
                     }
                 });
@@ -131,7 +132,9 @@ $(document).ready(function() {
                 });
             }
         }
+        alert(JSON.stringify(jumps));
         removeIfInBoard(jumps, pieces);
+        alert(JSON.stringify(jumps));
         return jumps;
     }
 
@@ -182,7 +185,7 @@ $(document).ready(function() {
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
-                        drawMoveOrJump(moves);
+                        // drawMoveOrJump(moves);
                         drawMoveOrJump(jumps);
                     });
                 $(".playBoard").append(domPiece);
@@ -193,6 +196,8 @@ $(document).ready(function() {
     function drawMoveOrJump(moves) {
         if (moves[0] != null || moves[1] != null) {  //WAtch this, this returns some times one value others two...
             $(moves).each(function(index, move) {
+                if (move == null)
+                    return;
                 var domMove = document.createElement("div");
                 $(domMove)
                     .addClass("moveSquare")
@@ -233,10 +238,14 @@ $(document).ready(function() {
         $("body").append("<br /> <br />");
 
         drawBoard();
+
         pieces.playerOne[8].coords = {y: 3, x: 1};
         pieces.cpu[1].coords = {y: 4, x: 2};
         pieces.playerOne[11].coords = {y: 3, x: 5};
         pieces.cpu[2].coords = {y: 4, x: 6};
+
+        // pieces.cpu[3].coords = {y: 4, x: 6};
+
         // alert(JSON.stringify(pieces.playerOne) + "\n\n" + JSON.stringify(pieces.cpu))
         drawPieces(pieces);
         // alert(JSON.stringify(pieces.playerOne[8].coords));
