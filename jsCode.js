@@ -45,8 +45,8 @@ $(document).ready(function() {
         }
         return pieces;
     }
-
-    function checkBoardPieces(moves, pieces) {
+ 
+    function removeIfInBoard(moves, pieces) {
         $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
             var moveString = JSON.stringify(move);
             Object.keys(pieces).forEach(function(player) { //loop through each player
@@ -62,82 +62,76 @@ $(document).ready(function() {
     }
 
     function move(piece, pieces) {
+        var boardBeginning = 0;
         var boardLimit = 7;
         var step = 1;
         var moves = [];
-        if (piece.color === "Red") {
-            if (piece.coords.y < boardLimit) {
-                if (piece.coords.x > 0) {
-                    moves.push({
-                        y: piece.coords.y + step,
-                        x: piece.coords.x - step}
-                    );
-                }
-                if (piece.coords.x < boardLimit){
-                    moves.push({
-                        y: piece.coords.y + step,
-                        x: piece.coords.x + step}
-                    );
-                }
+        if (piece.color === "Red" && piece.coords.y < boardLimit) {
+            if (piece.coords.x > boardBeginning) {
+                moves.push({
+                    y: piece.coords.y + step,
+                    x: piece.coords.x - step}
+                );
+            }
+            if (piece.coords.x < boardLimit){
+                moves.push({
+                    y: piece.coords.y + step,
+                    x: piece.coords.x + step}
+                );
             }
         }
-        else {
-            if (piece.coords.y > 0){
-                if (piece.coords.x > 0) {
-                    moves.push({
-                        y: piece.coords.y - step,
-                        x: piece.coords.x - step}
-                    );
-                }
-                if (piece.coords.x < boardLimit){
-                    moves.push({
-                        y: piece.coords.y - step,
-                        x: piece.coords.x + step}
-                    );
-                }
+        else if (piece.coords.y > boardBeginning) {
+            if (piece.coords.x > boardBeginning) {
+                moves.push({
+                    y: piece.coords.y - step,
+                    x: piece.coords.x - step}
+                );
+            }
+            if (piece.coords.x < boardLimit){
+                moves.push({
+                    y: piece.coords.y - step,
+                    x: piece.coords.x + step}
+                );
             }
         }
-        checkBoardPieces(moves, pieces);
+        removeIfInBoard(moves, pieces);
         return moves;
     }
 
     function jump(piece, pieces) { //move and jump can be refactored as one
+        var boardBeginning = 1;
         var boardLimit = 6;
         var step = 2;
         var jumps = [];
-        if (piece.color === "Red") {
-            if (piece.coords.y < boardLimit) {
-                if (piece.coords.x > 1) {
-                    jumps.push({
-                        y: piece.coords.y + step,
-                        x: piece.coords.x - step}
-                    );
-                }
-                if (piece.coords.x < boardLimit){
-                    jumps.push({
-                        y: piece.coords.y + step,
-                        x: piece.coords.x + step}
-                    );
-                }
+        if (piece.color === "Red" && piece.coords.y < boardLimit) {
+            if (piece.coords.x > boardBeginning) {
+                jumps.push({
+                    y: piece.coords.y + step,
+                    x: piece.coords.x - step}
+                );
+            }
+            if (piece.coords.x < boardLimit){
+                jumps.push({
+                    y: piece.coords.y + step,
+                    x: piece.coords.x + step}
+                );
             }
         }
-        else {
-            if (piece.coords.y > 1){
-                if (piece.coords.x > 1) {
-                    jumps.push({
-                        y: piece.coords.y - step,
-                        x: piece.coords.x - step}
-                    );
-                }
-                if (piece.coords.x < boardLimit){
-                    jumps.push({
-                        y: piece.coords.y - step,
-                        x: piece.coords.x + step}
-                    );
-                }
+        else if (piece.coords.y > boardBeginning) {
+            if (piece.coords.x > boardBeginning) {
+                jumps.push({
+                    y: piece.coords.y - step,
+                    x: piece.coords.x - step}
+                );
+            }
+            if (piece.coords.x < boardLimit){
+                jumps.push({
+                    y: piece.coords.y - step,
+                    x: piece.coords.x + step}
+                );
             }
         }
-        checkBoardPieces(jumps, pieces);
+        removeIfInBoard(jumps, pieces);
         return jumps;
     }
 
@@ -184,12 +178,12 @@ $(document).ready(function() {
                     .click(function() {
                         $(".moveSquare").remove();
                         var moves = move(piece, pieces);
-                        // var jumps = jump(piece, pieces);
+                        var jumps = jump(piece, pieces);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
                         drawMoveOrJump(moves);
-                        // drawMoveOrJump(jumps);
+                        drawMoveOrJump(jumps);
                     });
                 $(".playBoard").append(domPiece);
             })
