@@ -53,15 +53,12 @@ $(document).ready(function() {
                 $(pieces[player]).each(function(indexPiece, piece) { //loop through each piece of the player
                     var pieceString = JSON.stringify(piece.coords);
                     if (moveString === pieceString) {
-                        delete moves[movesIndex];
-                        // moves.splice(movesIndex, 1);
+                        moves.splice(movesIndex, 1);
                         return false;
                     }
                 });
             });
-            alert(movesIndex);
         });
-        // alert(JSON.stringify(moves));
     }
 
     function move(piece, pieces) {
