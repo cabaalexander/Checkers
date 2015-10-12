@@ -132,9 +132,9 @@ $(document).ready(function() {
                 });
             }
         }
-        alert(JSON.stringify(jumps));
+        // alert(JSON.stringify(jumps));
         removeIfInBoard(jumps, pieces);
-        alert(JSON.stringify(jumps));
+        // alert(JSON.stringify(jumps));
         return jumps;
     }
 
@@ -180,7 +180,7 @@ $(document).ready(function() {
                     })
                     .click(function() {
                         $(".moveSquare").remove();
-                        var moves = move(piece, pieces);
+                        // var moves = move(piece, pieces);
                         var jumps = jump(piece, pieces);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
