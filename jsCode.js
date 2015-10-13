@@ -99,6 +99,22 @@ $(document).ready(function() {
         return moves;
     }
 
+    function vefiryJumpToTheLeft(piece, jump, jumps) {
+        var beforeJump = {
+            y: jump.y - 1,
+            x: jump.x + 1
+        }
+        var beforeJumpString = JSON.stringify(beforeJump);
+        for (player in pieces) {
+            $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                    jumps.push(jump);
+                }
+            });
+        }
+    }
+
     function jump(piece, pieces) { //move and jump can be refactored as one
         var boardBeginning = 1;
         var boardLimit = 6;
@@ -110,23 +126,7 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                var beforeJump = {
-                    y: jump.y - 1,
-                    x: jump.x + 1
-                }
-                var beforeJumpString = JSON.stringify(beforeJump);
-                // alert(JSON.stringify(jump) + "\n" + beforeJumpString);
-                for (player in pieces) {
-                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                        var pieceString = JSON.stringify(pieceLoop.coords);
-                        if (pieceString === beforeJumpString && pieceLoop.color !== piece.color) {
-                            alert(piece.color);
-                            alert(pieceLoop.color);
-                            jumps.push(jump);
-                        }
-                    })
-                }
-                // jumps.push(jump);
+                vefiryJumpToTheLeft(piece, jump, jumps);
             }
             if (piece.coords.x < boardLimit){
                 jumps.push({
