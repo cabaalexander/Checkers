@@ -99,8 +99,8 @@ $(document).ready(function() {
         return moves;
     }
 
-    //THIS METHOD IS TO REFACTOR THE 'jump' METHOD
-    function verifyBeforeJumpPiece(piece, jump, jumps, leftOrRight) {
+    function verifyBeforeJumpPiece(piece, jump, leftOrRight) {
+        var bool = undefined;
         if (piece.color === "Red") {
             var newY = jump.y - 1;
             var newX = (leftOrRight === "left") ? jump.x + 1 : jump.x - 1;
@@ -118,13 +118,14 @@ $(document).ready(function() {
             $(pieces[player]).each(function(pieceIndex, pieceLoop) {
                 var pieceLoopString = JSON.stringify(pieceLoop.coords);
                 if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                    jumps.push(jump);
+                    bool = true;
                 }
             });
         }
+        return bool;
     }
 
-    function jump(piece, pieces) { //move and jump can be refactored as one
+    function jump(piece, pieces) {
         var boardBeginning = 1;
         var boardLimit = 6;
         var step = 2;
@@ -135,14 +136,16 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                verifyBeforeJumpPiece(piece, jump, jumps, "left");
+                if (verifyBeforeJumpPiece(piece, jump, "left"))
+                    jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
                 var jump = {
                     y: piece.coords.y + step,
                     x: piece.coords.x + step
                 };
-                verifyBeforeJumpPiece(piece, jump, jumps, "right");
+                if (verifyBeforeJumpPiece(piece, jump, "right"))
+                    jumps.push(jump);
             }
         }
         else if (piece.coords.y > boardBeginning) {
@@ -151,19 +154,19 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x - step
                 };
-                verifyBeforeJumpPiece(piece, jump, jumps, "left");
+                if (verifyBeforeJumpPiece(piece, jump, "left"))
+                    jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
                 var jump = {
                     y: piece.coords.y - step,
                     x: piece.coords.x + step
                 }
-                verifyBeforeJumpPiece(piece, jump, jumps, "right");
+                if (verifyBeforeJumpPiece(piece, jump, "right"))
+                    jumps.push(jump);
             }
         }
-        // alert(JSON.stringify(jumps));
         removeMoveIfPieceOnBoard(jumps, pieces);
-        // alert(JSON.stringify(jumps));
         return jumps;
     }
 
