@@ -99,21 +99,22 @@ $(document).ready(function() {
         return moves;
     }
 
-    function vefiryJumpToTheLeft(piece, jump, jumps) {
-        var beforeJump = {
-            y: jump.y - 1,
-            x: jump.x + 1
-        }
-        var beforeJumpString = JSON.stringify(beforeJump);
-        for (player in pieces) {
-            $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                var pieceLoopString = JSON.stringify(pieceLoop.coords);
-                if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                    jumps.push(jump);
-                }
-            });
-        }
-    }
+    //THIS METHOD IS TO REFACTOR THE 'jump' METHOD
+    // function vefiryJumpToTheLeft(piece, jump, jumps) {
+    //     var beforeJump = {
+    //         y: jump.y - 1,
+    //         x: jump.x + 1
+    //     }
+    //     var beforeJumpString = JSON.stringify(beforeJump);
+    //     for (player in pieces) {
+    //         $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+    //             var pieceLoopString = JSON.stringify(pieceLoop.coords);
+    //             if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+    //                 jumps.push(jump);
+    //             }
+    //         });
+    //     }
+    // }
 
     function jump(piece, pieces) { //move and jump can be refactored as one
         var boardBeginning = 1;
@@ -126,27 +127,78 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                vefiryJumpToTheLeft(piece, jump, jumps);
+                var beforeJump = {
+                    y: jump.y - 1,
+                    x: jump.x + 1 //just this line changes
+                };
+                var beforeJumpString = JSON.stringify(beforeJump);
+                for (player in pieces) {
+                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                            jumps.push(jump);
+                        }
+                    });
+                }
             }
-            if (piece.coords.x < boardLimit){
-                jumps.push({
+            if (piece.coords.x < boardLimit) {
+                var jump = {
                     y: piece.coords.y + step,
                     x: piece.coords.x + step
-                });
+                };
+                var beforeJump = {
+                    y: jump.y - 1,
+                    x: jump.x - 1 //just this lines changes
+                };
+                var beforeJumpString = JSON.stringify(beforeJump);
+                for (player in pieces) {
+                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                            jumps.push(jump);
+                        }
+                    });
+                }
             }
         }
         else if (piece.coords.y > boardBeginning) {
             if (piece.coords.x > boardBeginning) {
-                jumps.push({
+                var jump = {
                     y: piece.coords.y - step,
                     x: piece.coords.x - step
-                });
+                };
+                var beforeJump = {
+                    y: jump.y + 1,
+                    x: jump.x + 1 //this line only changes from the white one
+                };
+                var beforeJumpString = JSON.stringify(beforeJump);
+                for (player in pieces) {
+                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                            jumps.push(jump);
+                        }
+                    });
+                }
             }
             if (piece.coords.x < boardLimit) {
-                jumps.push({
+                var jump = {
                     y: piece.coords.y - step,
                     x: piece.coords.x + step
-                });
+                }
+                var beforeJump = {
+                    y: jump.y + 1,
+                    x: jump.x - 1 //this line only changes from the white one
+                };
+                var beforeJumpString = JSON.stringify(beforeJump);
+                for (player in pieces) {
+                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                            jumps.push(jump);
+                        }
+                    });
+                }
             }
         }
         // alert(JSON.stringify(jumps));
@@ -197,12 +249,12 @@ $(document).ready(function() {
                     })
                     .click(function() {
                         $(".moveSquare").remove();
-                        // var moves = move(piece, pieces);
+                        var moves = move(piece, pieces);
                         var jumps = jump(piece, pieces);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
-                        // drawMoveOrJump(moves);
+                        drawMoveOrJump(moves);
                         drawMoveOrJump(jumps);
                     });
                 $(".playBoard").append(domPiece);
@@ -256,9 +308,12 @@ $(document).ready(function() {
 
         drawBoard();
 
-        pieces.playerOne[8].coords = {y: 3, x: 1};
+        pieces.playerOne[8].coords = {y: 5, x: 3};
         // pieces.cpu[1].coords = {y: 4, x: 2};
+        pieces.cpu[0].coords = {y: 4, x: 2};
         pieces.cpu[1].coords = {y: 3, x: 3};
+        pieces.playerOne[10].coords = {y: 3, x: 1};
+        // pieces.playerOne[10].color = "Blue";
         pieces.playerOne[11].coords = {y: 3, x: 5};
         pieces.cpu[2].coords = {y: 4, x: 6};
 
