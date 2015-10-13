@@ -106,10 +106,24 @@ $(document).ready(function() {
         var jumps = [];
         if (piece.color === "Red" && piece.coords.y < boardLimit) {
             if (piece.coords.x > boardBeginning) {
-                jumps.push({
+                var jump = {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
-                });
+                };
+                var beforeJump = {
+                    y: jump.y - 1,
+                    x: jump.x + 1
+                }
+                var beforeJumpString = JSON.stringify(beforeJump);
+                // for (player in pieces) {
+                //     $(pieces[player]).each(function(pieceIndex, piece) {
+                //         var pieceString = JSON.stringify(piece);
+                //         if (pieceString === beforeJumpString && piece.color === "White") {
+                //             jumps.push(jump);
+                //         }
+                //     })
+                // }
+                jumps.push(jump);
             }
             if (piece.coords.x < boardLimit){
                 jumps.push({
@@ -240,7 +254,8 @@ $(document).ready(function() {
         drawBoard();
 
         pieces.playerOne[8].coords = {y: 3, x: 1};
-        pieces.cpu[1].coords = {y: 4, x: 2};
+        // pieces.cpu[1].coords = {y: 4, x: 2};
+        pieces.cpu[1].coords = {y: 3, x: 3};
         pieces.playerOne[11].coords = {y: 3, x: 5};
         pieces.cpu[2].coords = {y: 4, x: 6};
 
