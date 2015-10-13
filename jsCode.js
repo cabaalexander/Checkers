@@ -115,15 +115,18 @@ $(document).ready(function() {
                     x: jump.x + 1
                 }
                 var beforeJumpString = JSON.stringify(beforeJump);
-                // for (player in pieces) {
-                //     $(pieces[player]).each(function(pieceIndex, piece) {
-                //         var pieceString = JSON.stringify(piece);
-                //         if (pieceString === beforeJumpString && piece.color === "White") {
-                //             jumps.push(jump);
-                //         }
-                //     })
-                // }
-                jumps.push(jump);
+                // alert(JSON.stringify(jump) + "\n" + beforeJumpString);
+                for (player in pieces) {
+                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                        var pieceString = JSON.stringify(pieceLoop.coords);
+                        if (pieceString === beforeJumpString && pieceLoop.color !== piece.color) {
+                            alert(piece.color);
+                            alert(pieceLoop.color);
+                            jumps.push(jump);
+                        }
+                    })
+                }
+                // jumps.push(jump);
             }
             if (piece.coords.x < boardLimit){
                 jumps.push({
