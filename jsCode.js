@@ -46,7 +46,7 @@ $(document).ready(function() {
         return pieces;
     }
  
-    function removeIfInBoard(moves, pieces) {
+    function removeMoveIfPieceOnBoard(moves, pieces) {
         $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
             var moveString = JSON.stringify(move);
             Object.keys(pieces).forEach(function(player) { //loop through each player
@@ -95,19 +95,17 @@ $(document).ready(function() {
                 });
             }
         }
-        removeIfInBoard(moves, pieces);
+        removeMoveIfPieceOnBoard(moves, pieces);
         return moves;
     }
 
     //THIS METHOD IS TO REFACTOR THE 'jump' METHOD
-    function vefiryJumpToTheLeft(piece, jump, jumps, leftOrRight) {
+    function verifyBeforeJumpPiece(piece, jump, jumps, leftOrRight) {
         if (piece.color === "Red") {
-            //y: -1
             var newY = jump.y - 1;
             var newX = (leftOrRight === "left") ? jump.x + 1 : jump.x - 1;
         }
         else {
-            //y: +1
             var newY = jump.y + 1;
             var newX = (leftOrRight === "left") ? jump.x + 1 : jump.x - 1;
         }
@@ -137,38 +135,14 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                var beforeJump = {
-                    y: jump.y - 1,
-                    x: jump.x + 1 //just this line changes
-                };
-                var beforeJumpString = JSON.stringify(beforeJump);
-                for (player in pieces) {
-                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
-                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                            jumps.push(jump);
-                        }
-                    });
-                }
+                verifyBeforeJumpPiece(piece, jump, jumps, "left");
             }
             if (piece.coords.x < boardLimit) {
                 var jump = {
                     y: piece.coords.y + step,
                     x: piece.coords.x + step
                 };
-                var beforeJump = {
-                    y: jump.y - 1,
-                    x: jump.x - 1 //just this lines changes
-                };
-                var beforeJumpString = JSON.stringify(beforeJump);
-                for (player in pieces) {
-                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
-                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                            jumps.push(jump);
-                        }
-                    });
-                }
+                verifyBeforeJumpPiece(piece, jump, jumps, "right");
             }
         }
         else if (piece.coords.y > boardBeginning) {
@@ -177,42 +151,18 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x - step
                 };
-                var beforeJump = {
-                    y: jump.y + 1,
-                    x: jump.x + 1 //this line only changes from the white one
-                };
-                var beforeJumpString = JSON.stringify(beforeJump);
-                for (player in pieces) {
-                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
-                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                            jumps.push(jump);
-                        }
-                    });
-                }
+                verifyBeforeJumpPiece(piece, jump, jumps, "left");
             }
             if (piece.coords.x < boardLimit) {
                 var jump = {
                     y: piece.coords.y - step,
                     x: piece.coords.x + step
                 }
-                var beforeJump = {
-                    y: jump.y + 1,
-                    x: jump.x - 1 //this line only changes from the white one
-                };
-                var beforeJumpString = JSON.stringify(beforeJump);
-                for (player in pieces) {
-                    $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-                        var pieceLoopString = JSON.stringify(pieceLoop.coords);
-                        if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-                            jumps.push(jump);
-                        }
-                    });
-                }
+                verifyBeforeJumpPiece(piece, jump, jumps, "right");
             }
         }
         // alert(JSON.stringify(jumps));
-        removeIfInBoard(jumps, pieces);
+        removeMoveIfPieceOnBoard(jumps, pieces);
         // alert(JSON.stringify(jumps));
         return jumps;
     }
@@ -321,7 +271,7 @@ $(document).ready(function() {
         pieces.playerOne[8].coords = {y: 5, x: 3};
         // pieces.cpu[1].coords = {y: 4, x: 2};
         pieces.cpu[0].coords = {y: 4, x: 2};
-        pieces.cpu[1].coords = {y: 3, x: 3};
+        pieces.cpu[1].coords = {y: 2, x: 4};
         pieces.playerOne[10].coords = {y: 3, x: 1};
         // pieces.playerOne[10].color = "Blue";
         pieces.playerOne[11].coords = {y: 3, x: 5};
