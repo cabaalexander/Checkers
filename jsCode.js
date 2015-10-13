@@ -210,23 +210,24 @@ $(document).ready(function() {
                         bottom: 82 * piece.coords.y,
                         background: this.color
                     })
-                    .click(function() {
+                    .click(function(e) {
                         $(".moveSquare").remove();
                         var moves = move(piece, pieces);
                         var jumps = jump(piece, pieces);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
-                        drawMoveOrJump(moves);
-                        drawMoveOrJump(jumps);
+                        // console.log(e);
+                        drawMoveOrJump(piece, moves);
+                        drawMoveOrJump(piece, jumps);
                     });
                 $(".playBoard").append(domPiece);
             })
         });
     }
 
-    function drawMoveOrJump(moves) {
-        if (moves[0] != null || moves[1] != null) {  //WAtch this, this returns some times one value others two...
+    function drawMoveOrJump(piece, moves) {
+        if (moves[0] != null || moves[1] != null) {
             $(moves).each(function(index, move) {
                 if (move == null)
                     return;
@@ -234,17 +235,39 @@ $(document).ready(function() {
                 $(domMove)
                     .addClass("moveSquare")
                     .css({
-                        left: 82 * $(this)[0].x,
-                        bottom: 82 * $(this)[0].y
+                        left: 82 * move.x,
+                        bottom: 82 * move.y
+                    })
+                    .click(function() {
+                        $(".moveSquare").remove();
+                        console.log("Piece");
+                        console.log(piece.coords);
+
+                        console.log("Move");
+                        console.log(move);
+
+                        piece.coords.y = move.y;
+                        piece.coords.x = move.x;
+
+                        console.log("Piece <=> Move");
+                        console.log(piece.coords);
+
+                        updateBoard();
                     });
+                // console.log(move);
                 $(".playBoard").append(domMove);
             });
         }
     }
 
+    function updateBoard() {
+        $(".piece").remove();
+        drawPieces(pieces);
+    }
+
     var pieces = createPieces();
 
-    //append to 'body'
+    //Begin
     $(function() {
         var board = createBoard();
         for (var i = 0; i < 8; i++) {
@@ -257,42 +280,9 @@ $(document).ready(function() {
         $("body").append("<br /> <br />" + JSON.stringify(pieces.playerOne));
         $("body").append("<br /> <br />" + JSON.stringify(pieces.cpu));
 
-        // $("body").append("<br /> <br />" + JSON.stringify(move(pieces.playerOne[0])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[1])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[2])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.playerOne[3])));
-
-        // $("body").append("<br /> <br />" + JSON.stringify(move(pieces.cpu[0])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[1])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[2])));
-        // $("body").append(" <====> " + JSON.stringify(move(pieces.cpu[3])));
-
         $("body").append("<br /> <br />");
 
         drawBoard();
-
-        pieces.playerOne[8].coords = {y: 5, x: 3};
-        // pieces.cpu[1].coords = {y: 4, x: 2};
-        pieces.cpu[0].coords = {y: 4, x: 2};
-        pieces.cpu[1].coords = {y: 2, x: 4};
-        pieces.playerOne[10].coords = {y: 3, x: 1};
-        // pieces.playerOne[10].color = "Blue";
-        pieces.playerOne[11].coords = {y: 3, x: 5};
-        pieces.cpu[2].coords = {y: 4, x: 6};
-
-        // pieces.cpu[3].coords = {y: 4, x: 6};
-
-        // alert(JSON.stringify(pieces.playerOne) + "\n\n" + JSON.stringify(pieces.cpu))
         drawPieces(pieces);
-        // alert(JSON.stringify(pieces.playerOne[8].coords));
-
-        // $("body").append("<br /> <br />");
-        // var divElement = document.createElement("div");
-        // $(divElement).addClass("redPiece");
-        // $(divElement).css({
-        //     bottom: 80 * pieces.cpu[1].coords.y,
-        //     left: 80 * pieces.cpu[1].coords.x
-        // });
-        // $(".playBoard").append(divElement);
     });
 });
