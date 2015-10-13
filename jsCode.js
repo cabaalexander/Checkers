@@ -100,21 +100,31 @@ $(document).ready(function() {
     }
 
     //THIS METHOD IS TO REFACTOR THE 'jump' METHOD
-    // function vefiryJumpToTheLeft(piece, jump, jumps) {
-    //     var beforeJump = {
-    //         y: jump.y - 1,
-    //         x: jump.x + 1
-    //     }
-    //     var beforeJumpString = JSON.stringify(beforeJump);
-    //     for (player in pieces) {
-    //         $(pieces[player]).each(function(pieceIndex, pieceLoop) {
-    //             var pieceLoopString = JSON.stringify(pieceLoop.coords);
-    //             if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
-    //                 jumps.push(jump);
-    //             }
-    //         });
-    //     }
-    // }
+    function vefiryJumpToTheLeft(piece, jump, jumps, leftOrRight) {
+        if (piece.color === "Red") {
+            //y: -1
+            var newY = jump.y - 1;
+            var newX = (leftOrRight === "left") ? jump.x + 1 : jump.x - 1;
+        }
+        else {
+            //y: +1
+            var newY = jump.y + 1;
+            var newX = (leftOrRight === "left") ? jump.x + 1 : jump.x - 1;
+        }
+        var beforeJump = {
+            y: newY,
+            x: newX
+        };
+        var beforeJumpString = JSON.stringify(beforeJump);
+        for (player in pieces) {
+            $(pieces[player]).each(function(pieceIndex, pieceLoop) {
+                var pieceLoopString = JSON.stringify(pieceLoop.coords);
+                if (pieceLoopString === beforeJumpString && pieceLoop.color != piece.color) {
+                    jumps.push(jump);
+                }
+            });
+        }
+    }
 
     function jump(piece, pieces) { //move and jump can be refactored as one
         var boardBeginning = 1;
