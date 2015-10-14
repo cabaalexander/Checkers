@@ -99,7 +99,7 @@ $(document).ready(function() {
         return moves;
     }
 
-    function verifyBeforeJumpPiece(piece, jump, leftOrRight) {
+    function isNextPieceEnemy(piece, jump, leftOrRight) {
         var bool = undefined;
         if (piece.color === "Red") {
             var newY = jump.y - 1;
@@ -136,7 +136,7 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                if (verifyBeforeJumpPiece(piece, jump, "left"))
+                if (isNextPieceEnemy(piece, jump, "left"))
                     jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
@@ -144,7 +144,7 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x + step
                 };
-                if (verifyBeforeJumpPiece(piece, jump, "right"))
+                if (isNextPieceEnemy(piece, jump, "right"))
                     jumps.push(jump);
             }
         }
@@ -154,7 +154,7 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x - step
                 };
-                if (verifyBeforeJumpPiece(piece, jump, "left"))
+                if (isNextPieceEnemy(piece, jump, "left"))
                     jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
@@ -162,12 +162,45 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x + step
                 }
-                if (verifyBeforeJumpPiece(piece, jump, "right"))
+                if (isNextPieceEnemy(piece, jump, "right"))
                     jumps.push(jump);
             }
         }
         removeMoveIfPieceOnBoard(jumps, pieces);
         return jumps;
+    }
+
+    function drawMoveOrJump(piece, moves) {
+        if (moves[0] != null || moves[1] != null) {
+            $(moves).each(function(index, move) {
+                if (move == null)
+                    return;
+                var domMove = document.createElement("div");
+                $(domMove)
+                    .addClass("moveSquare")
+                    .css({
+                        left: 82 * move.x,
+                        bottom: 82 * move.y
+                    })
+                    .click(function() {
+                        $(".moveSquare").remove();
+                        console.log("Piece");
+                        console.log(piece.coords);
+
+                        console.log("Move");
+                        console.log(move);
+
+                        piece.coords.y = move.y;
+                        piece.coords.x = move.x;
+
+                        console.log("Piece <=> Move");
+                        console.log(piece.coords);
+
+                        updateBoard();
+                    });
+                $(".playBoard").append(domMove);
+            });
+        }
     }
 
     function drawBoard() {
@@ -224,40 +257,6 @@ $(document).ready(function() {
                 $(".playBoard").append(domPiece);
             })
         });
-    }
-
-    function drawMoveOrJump(piece, moves) {
-        if (moves[0] != null || moves[1] != null) {
-            $(moves).each(function(index, move) {
-                if (move == null)
-                    return;
-                var domMove = document.createElement("div");
-                $(domMove)
-                    .addClass("moveSquare")
-                    .css({
-                        left: 82 * move.x,
-                        bottom: 82 * move.y
-                    })
-                    .click(function() {
-                        $(".moveSquare").remove();
-                        console.log("Piece");
-                        console.log(piece.coords);
-
-                        console.log("Move");
-                        console.log(move);
-
-                        piece.coords.y = move.y;
-                        piece.coords.x = move.x;
-
-                        console.log("Piece <=> Move");
-                        console.log(piece.coords);
-
-                        updateBoard();
-                    });
-                // console.log(move);
-                $(".playBoard").append(domMove);
-            });
-        }
     }
 
     function updateBoard() {
