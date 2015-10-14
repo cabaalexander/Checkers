@@ -46,7 +46,7 @@ $(document).ready(function() {
         return pieces;
     }
  
-    function removeMoveIfPieceOnBoard(moves, pieces) {
+    function removeMoveIfPieceOnBoard(moves) {
         $(moves).each(function(movesIndex, move) { //if a move from moves is on the set of pieces, deletes it
             var moveString = JSON.stringify(move);
             Object.keys(pieces).forEach(function(player) { //loop through each player
@@ -62,7 +62,7 @@ $(document).ready(function() {
         });
     }
 
-    function move(piece, pieces) {
+    function move(piece) {
         var boardBeginning = 0;
         var boardLimit = 7;
         var step = 1;
@@ -95,11 +95,11 @@ $(document).ready(function() {
                 });
             }
         }
-        removeMoveIfPieceOnBoard(moves, pieces);
+        removeMoveIfPieceOnBoard(moves);
         return moves;
     }
 
-    function isNextPieceEnemy(piece, jump, leftOrRight, pieces) {
+    function isNextPieceEnemy(piece, jump, leftOrRight) {
         var bool = undefined;
         if (piece.color === "Red") {
             var newY = jump.y - 1;
@@ -128,7 +128,7 @@ $(document).ready(function() {
         return bool;
     }
 
-    function jump(piece, pieces) {
+    function jump(piece) {
         var boardBeginning = 1;
         var boardLimit = 6;
         var step = 2;
@@ -139,7 +139,7 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x - step
                 };
-                if (isNextPieceEnemy(piece, jump, "left", pieces))
+                if (isNextPieceEnemy(piece, jump, "left"))
                     jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
@@ -147,7 +147,7 @@ $(document).ready(function() {
                     y: piece.coords.y + step,
                     x: piece.coords.x + step
                 };
-                if (isNextPieceEnemy(piece, jump, "right", pieces))
+                if (isNextPieceEnemy(piece, jump, "right"))
                     jumps.push(jump);
             }
         }
@@ -157,7 +157,7 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x - step
                 };
-                if (isNextPieceEnemy(piece, jump, "left", pieces))
+                if (isNextPieceEnemy(piece, jump, "left"))
                     jumps.push(jump);
             }
             if (piece.coords.x < boardLimit) {
@@ -165,11 +165,11 @@ $(document).ready(function() {
                     y: piece.coords.y - step,
                     x: piece.coords.x + step
                 }
-                if (isNextPieceEnemy(piece, jump, "right", pieces))
+                if (isNextPieceEnemy(piece, jump, "right"))
                     jumps.push(jump);
             }
         }
-        removeMoveIfPieceOnBoard(jumps, pieces);
+        removeMoveIfPieceOnBoard(jumps);
         return jumps;
     }
 
@@ -251,8 +251,8 @@ $(document).ready(function() {
                     })
                     .click(function(e) {
                         $(".moveSquare").remove();
-                        var moves = move(piece, pieces);
-                        var jumps = jump(piece, pieces);
+                        var moves = move(piece);
+                        var jumps = jump(piece);
                         // alert(JSON.stringify(indexPiece) + "\n" + JSON.stringify(piece.coords)); //debugging
                         // alert(JSON.stringify(moves)); //debugging
                         // alert(JSON.stringify(jumps)); //debugging
